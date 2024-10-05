@@ -1,9 +1,9 @@
 .data
 	# creating the necessary space for each array to store 16 word elements
-	contentArray: .space 64
-	keyArray: .space 64
-	randContentArray: .space 64
-	randKeyArray: .space 64
+	contentArray: .space 128
+	keyArray: .space 128
+	randContentArray: .space 128
+	randKeyArray: .space 128
 	X: .word 5
 	Y: .word 5
 
@@ -15,7 +15,8 @@
 		li $s0, 1					# the constant 1
 		
 		
-	InitizalizeArrays:
+	InitializeArrays:
+		addi $t2, $t2, 1			# increment index
 		li $v0, 41					# get ready to generate a random number within range
 		li $a0, 0					
 		syscall					# generate random int
@@ -42,12 +43,29 @@
 		setY:
 			sw $a0, Y			# store random int into Y
 			lw $t4, Y				# load content of Y into $t4
-			
-			
-		li $v0, 1
-		lw $a0, X
-		syscall
 		
-		li $v0, 1
-		lw $a0, Y
-		syscall
+		mul $t5, $t3, $t4			# multiply X and Y, then store the value in $t5
+		sw $t5, 0($t0)				# put the product of X and Y into the content array
+		sw $t5, 0($t1)				# put the product of X and Y into the key array
+		
+		addi $t0, $t0, 4			# move to the location of the next element in the content array
+		addi $t1, $t1, 4			# move to the location of the next element in the key array
+		
+		addi $t6, $t3, 48			# add 48 to value of X to get its ASCII value
+		addi $t7, $t4, 48			# add 48 to value of Y to get its ASCII value
+		li $t8, 120
+		
+		sb $t6, 0($t0)				# store the string version of X value into content array
+		addi $t0, $t0, 1			# move to the next BYTE in content array
+		sb $t8, 0($t0)				# store the "x" into content array
+		addi $t0, $t0, 1			# move to the next BYTE in content array
+		sb $t7, 0($t0)				# store the string version of Y value into content array
+		addi $t0, $t0, 1			# move to the next BYTE in the content array
+		sb $zero, 0($t0)			# put null terminator to mark end of string
+		
+		sw $t5, 0($t1)				# put the product of X and Y into the key array
+		
+		addi $t0, $t0, 1			# move to the next BYTE (should now be next element) of content array
+		addi $t1, $t1, 4			# move to the next element in key array
+		
+		blt $t2, 16, InitializeArrays	# loop back to beginning
