@@ -1,16 +1,18 @@
 .data
 	# creating the necessary space for each array to store 16 word elements
-	contentArray: .space 128
-	keyArray: .space 128
-	randContentArray: .space 128
-	randKeyArray: .space 128
+	contentArray: .space 64
+	keyArray: .space 64
+	randContentArray: .space 64
+	randKeyArray: .space 64
 	X: .word 5
 	Y: .word 5
-	prompt1: .asciiz "Enter 1st coordinate (A-D, 1-4): "
-	prompt2: .asciiz "Enter 2nd coordinate (A-D, 1-4): "
-	not_match: .asciiz "Not a match!\n"
-	match: .asciiz "It's a match!\n"
-	invalid: .asciiz "Invalid coordinate. Reenter the coordinate (A-D, 1-4).\n"
+	prompt1: .asciiz "\nEnter 1st coordinate (A-D, 1-4): "
+	prompt2: .asciiz "\nEnter 2nd coordinate (A-D, 1-4): "
+	not_match: .asciiz "\nNot a match!"
+	match: .asciiz "\nIt's a match!"
+	invalid: .asciiz "\nInvalid coordinate. Reenter the coordinate (A-D, 1-4)."
+	value_message: .asciiz "The value at this coordinate is: "
+	newline: .asciiz "\n"
 
 .text
 	Start:
@@ -23,28 +25,28 @@
 		addi $t2, $t2, 1			# increment index
 		li $v0, 41					# get ready to generate a random number within range
 		li $a0, 0					
-		syscall					# generate random int
+		syscall						# generate random int
 		
-		rem $a0, $a0, 5			# turn random number into int from 0 to 4
+		rem $a0, $a0, 5				# turn random number into int from 0 to 4
 		add $a0, $a0, $s0			# increase rand int by 1 so now it goes from 1 to 5
-		bgtz $a0, setX			# confirming that the random int was a positive number
-		sub $a0, $zero, $a0		# if random int is negative, perform 0-randomInt to make it positive
+		bgtz $a0, setX				# confirming that the random int was a positive number
+		sub $a0, $zero, $a0			# if random int is negative, perform 0-randomInt to make it positive
 		
 		setX:
-			sw $a0, X			# store random int into X
+			sw $a0, X				# store random int into X
 			lw $t3, X				# load content of X into $t3
 		
 		li $v0, 41					# get ready to generate a random number within range
 		li $a0, 0					
-		syscall					# generate random int
+		syscall						# generate random int
 		
-		rem $a0, $a0, 5			# turn random number into int from 0 to 4
+		rem $a0, $a0, 5				# turn random number into int from 0 to 4
 		add $a0, $a0, $s0			# increase rand int by 1 so now it goes from 1 to 5
-		bgtz $a0, setY 			# confirming that the random int was a positive number
-		sub $a0, $zero, $a0		# if random int is negative, perform 0-randomInt to make it positive
+		bgtz $a0, setY 				# confirming that the random int was a positive number
+		sub $a0, $zero, $a0			# if random int is negative, perform 0-randomInt to make it positive
 		
 		setY:
-			sw $a0, Y			# store random int into Y
+			sw $a0, Y				# store random int into Y
 			lw $t4, Y				# load content of Y into $t4
 		
 		mul $t5, $t3, $t4			# multiply X and Y, then store the value in $t5
@@ -71,8 +73,8 @@
 		addi $t0, $t0, 1			# move to the next BYTE (should now be next element) of content array
 		addi $t1, $t1, 4			# move to the next element in key array
 		
-		blt $t2, 16, InitializeArrays	# loop back to beginning until the arrays are filled with 16 elements
-		
+		blt $t2, 8, InitializeArrays	# loop back to beginning until the arrays are filled with 16 elements
+
 	# User Input Section
 	UserInput:
 		# Prompt user for the 1st coordinate
@@ -102,11 +104,27 @@
 		add $t7, $t7, $t6			# final index = row index + column index
 		mul $t7, $t7, 4				# convert index to byte offset (word = 4 bytes)
 		
-		# Load the value from the content array at 1st coordinate
-		la $t0, contentArray
-		add $t0, $t0, $t7			# calculate address
-		lw $t8, 0($t0)				# load value
+		# Load the value from the key array at 1st coordinate
+		la $t1, keyArray
+		add $t1, $t1, $t7			# calculate address
+		lw $t8, 0($t1)				# load value
 		
+		# Load and print the value from the content array at 1st coordinate
+    		la $t1, contentArray
+    		add $t1, $t1, $t7            # Calculate address
+    		lw $a1, 0($t1)               # Load content value
+   		li $v0, 4                     # print string syscall
+    		la $a0, value_message         # load "The value at this coordinate is: "
+    		syscall
+    
+    		li $v0, 1                     # print integer syscall
+    		move $a0, $t8                 # move the value to $a0
+    		syscall
+    
+    		li $v0, 4                     # print string syscall for newline
+    		la $a0, newline               # load newline
+    		syscall
+    
 		# Prompt user for the 2nd coordinate (repeat process)
 		li $v0, 4					# print string syscall
 		la $a0, prompt2				# load 2nd prompt message
@@ -134,28 +152,46 @@
 		add $t7, $t7, $t6			# final index = row index + column index
 		mul $t7, $t7, 4				# convert index to byte offset (word = 4 bytes)
 		
-		# Load the value from the content array at 2nd coordinate
-		la $t0, contentArray
-		add $t0, $t0, $t7			# calculate address
-		lw $t9, 0($t0)				# load value
+		# Load the value from the key array at 2nd coordinate
+		la $t1, keyArray
+		add $t1, $t1, $t7			# calculate address
+		lw $t9, 0($t1)				# load value
 		
-		# Compare the two values
-		beq $t8, $t9, match_found	# if equal, it's a match
+		# Load and print the value from the content array at 2nd coordinate
+    		la $t1, contentArray
+    		add $t1, $t1, $t7             # Calculate address
+    		lw $a2, 0($t1)                # Load content value
+    		li $v0, 4                     # print string syscall
+    		la $a0, value_message         # load "The value at this coordinate is: "
+    		syscall
+    
+    		li $v0, 1                     # print integer syscall
+    		move $a0, $a2                 # move the value to $a0
+    		syscall
+    
+    		li $v0, 4                     # print string syscall for newline
+    		la $a0, newline               # load newline
+    		syscall
 		
-		# Not a match
+		# Check if the two coordinates match
+		beq $t8, $t9, match_found
 		li $v0, 4					# print string syscall
 		la $a0, not_match			# load "Not a match!" message
 		syscall
-		b UserInput					# repeat user input
+		b UserInput					# repeat the input process
 		
 	match_found:
 		li $v0, 4					# print string syscall
 		la $a0, match				# load "It's a match!" message
 		syscall
-		b UserInput					# repeat user input
-		
+		b End						# terminate program
+
 	invalid_input:
 		li $v0, 4					# print string syscall
-		la $a0, invalid				# load invalid input message
+		la $a0, invalid				# load invalid message
 		syscall
-		b UserInput					# repeat user input
+		b UserInput					# ask for input again
+
+	End:
+		li $v0, 10					# exit program
+		syscall
