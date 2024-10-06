@@ -1,9 +1,5 @@
 .data
 	# creating the necessary space for each array to store 16 word elements
-	contentArray: .space 128
-	keyArray: .space 128
-	randContentArray: .space 128
-	randKeyArray: .space 128
 	.globl contentArray
 	contentArray: .space 64
 	.globl keyArray
