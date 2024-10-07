@@ -120,7 +120,8 @@
 			lw $t9, ($t8)				# get conent at keyArray index $t6 and store it in $t9
 			sw $t9, 0($s6)			# store content of $t9 into the random key array
 			
-			# remove the element at $t7 from content array
+		RemoveFromContent:
+			
 			
 			# remove the element at $t8 from key array
 		j LoopCheck
