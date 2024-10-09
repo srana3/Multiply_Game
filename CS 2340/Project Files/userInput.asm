@@ -1,13 +1,4 @@
 .globl UserInput
-
-.data
-	prompt1: .asciiz "\nEnter 1st coordinate (A-D, 1-4): "
-	prompt2: .asciiz "\nEnter 2nd coordinate (A-D, 1-4): "
-	not_match: .asciiz "\nNot a match!"
-	match: .asciiz "\nIt's a match!"
-	invalid: .asciiz "\nInvalid coordinate. Reenter the coordinate (A-D, 1-4)."
-	value_message: .asciiz "The value at this coordinate is: "
-	newline: .asciiz "\n"
 	
 .text
 # User Input Section
@@ -40,12 +31,12 @@
 		mul $t7, $t7, 4				# convert index to byte offset (word = 4 bytes)
 		
 		# Load the value from the key array at 1st coordinate
-		la $t1, keyArray
+		la $t1, randKeyArray
 		add $t1, $t1, $t7			# calculate address
 		lw $t8, 0($t1)				# load value
 		
 		# Load and print the value from the content array at 1st coordinate
-    		la $t1, contentArray
+    		la $t1, randContentArray
     		add $t1, $t1, $t7            # Calculate address
     		lw $a1, 0($t1)               # Load content value
    		li $v0, 4                     # print string syscall
@@ -88,12 +79,12 @@
 		mul $t7, $t7, 4				# convert index to byte offset (word = 4 bytes)
 		
 		# Load the value from the key array at 2nd coordinate
-		la $t1, keyArray
+		la $t1, randKeyArray
 		add $t1, $t1, $t7			# calculate address
 		lw $t9, 0($t1)				# load value
 		
 		# Load and print the value from the content array at 2nd coordinate
-    		la $t1, contentArray
+    		la $t1, randContentArray
     		add $t1, $t1, $t7             # Calculate address
     		lw $a2, 0($t1)                # Load content value
     		li $v0, 4                     # print string syscall
@@ -119,14 +110,34 @@
 		li $v0, 4					# print string syscall
 		la $a0, match				# load "It's a match!" message
 		syscall
-		b End						# terminate program
+		
+		lw $t9, numMatches            # Load the current match count
+		addi $t9, $t9, 1            	# Increment match counter
+    		sw $t9, numMatches           	# Store updated match count
+    		
+    		# Print the number of matches found so far
+		li $v0, 4					# print string syscall
+		la $a0, match_count_message	# load "Number of matches: " message
+		syscall
+		
+		li $v0, 1					# print integer syscall
+		move $a0, $t9				# move the match count to $a0
+		syscall
+		
+		li $v0, 4					# print string syscall for newline
+		la $a0, newline				# load newline
+		syscall
+    		
+    		# Check if 8 matches are found
+    		li $t8, 8
+    		bne $t9, $t8, UserInput      # If less than 8 matches, continue
+
+    		# If 8 matches are made, go to EndGame
+    		jal EndGame
 
 	invalid_input:
 		li $v0, 4					# print string syscall
 		la $a0, invalid				# load invalid message
 		syscall
 		b UserInput					# ask for input again
-
-	End:
-		li $v0, 10					# exit program
-		syscall
+		

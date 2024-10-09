@@ -1,16 +1,4 @@
-.data
-	# creating the necessary space for each array to store 16 word elements
-	.globl contentArray
-	contentArray: .space 64
-	.globl keyArray
-	keyArray: .space 64
-	.globl randContentArray
-	randContentArray: .space 64
-	.globl randKeyArray
-	randKeyArray: .space 64
-	X: .word 5
-	Y: .word 5
-	
+.globl Start
 
 .text
 	Start:
@@ -141,5 +129,4 @@
 			addi $s6, $s6, 4			# move to the location of the next element in the random key array
 			
 			blt $s2, 16, Randomize 	#loop to beginning of randomize until all 16 elements have been randomized
-		
-		jal UserInput
+
