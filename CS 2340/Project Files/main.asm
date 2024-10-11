@@ -45,7 +45,7 @@
     		
 	jal Start
 	
-	jal UserInput
+	#jal UserInput
 	
 	EndGame:
     		# Ask the user if they want to restart
