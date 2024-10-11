@@ -108,8 +108,16 @@
 			lw $t9, ($t8)				# get conent at keyArray index $t6 and store it in $t9
 			sw $t9, 0($s6)			# store content of $t9 into the random key array
 			
+			addi $t0, $s0, 64			# get memory address of final element in content array
+			add $t1, $t7, $zero			# get a copy of memory address for content array at index
 		RemoveFromContent:
+			addi $t2, $t1, 4			# get address of "index + 1"
+			bge $t2, $t0, LoopCheck	# break if "index +1" is out of bounds
+			lw $t3, ($t2)				# get content at contentArray "index + 1" and store it in $t3
+			sw $t3, ($t1)				# store content from "index + 1" into "index"
 			
+			addi $t1, $t1, 4			# move to the address of the next element in the array
+			j RemoveFromContent
 			
 			# remove the element at $t8 from key array
 		j LoopCheck
@@ -129,4 +137,6 @@
 			addi $s6, $s6, 4			# move to the location of the next element in the random key array
 			
 			blt $s2, 16, Randomize 	#loop to beginning of randomize until all 16 elements have been randomized
+			
+			jal UserInput
 
