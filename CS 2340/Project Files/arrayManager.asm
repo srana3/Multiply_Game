@@ -110,16 +110,29 @@
 			
 			addi $t0, $s0, 64			# get memory address of final element in content array
 			add $t1, $t7, $zero			# get a copy of memory address for content array at index
+			
 		RemoveFromContent:
+			addi $t2, $t1, 4			# get address of "index + 1"
+			bge $t2, $t0, FinishedWithContent	# break if "index +1" is out of bounds
+			lw $t3, ($t2)				# get content at contentArray "index + 1" and store it in $t3
+			sw $t3, ($t1)				# store content from "index + 1" into "index"
+			
+			addi $t1, $t1, 4			# move to the address of the next element in the array
+			j RemoveFromContent
+		
+		FinishedWithContent:
+			addi $t0, $s1, 64
+			add $t1, $t8, $zero
+			
+		RemoveFromKey:
 			addi $t2, $t1, 4			# get address of "index + 1"
 			bge $t2, $t0, LoopCheck	# break if "index +1" is out of bounds
 			lw $t3, ($t2)				# get content at contentArray "index + 1" and store it in $t3
 			sw $t3, ($t1)				# store content from "index + 1" into "index"
 			
 			addi $t1, $t1, 4			# move to the address of the next element in the array
-			j RemoveFromContent
+			j RemoveFromKey
 			
-			# remove the element at $t8 from key array
 		j LoopCheck
 		
 		SetLastElement:
