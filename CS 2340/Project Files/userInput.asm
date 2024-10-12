@@ -38,13 +38,12 @@
 		# Load and print the value from the content array at 1st coordinate
     		la $t1, randContentArray
     		add $t1, $t1, $t7            # Calculate address
-    		lw $a1, 0($t1)               # Load content value
    		li $v0, 4                     # print string syscall
     		la $a0, value_message         # load "The value at this coordinate is: "
     		syscall
     
-    		li $v0, 1                     # print integer syscall
-    		move $a0, $t8                 # move the value to $a0
+    		li $v0, 4                     # print integer syscall
+    		la $a0, 0($t1)                 # move the value to $a0
     		syscall
     
     		li $v0, 4                     # print string syscall for newline
@@ -86,13 +85,12 @@
 		# Load and print the value from the content array at 2nd coordinate
     		la $t1, randContentArray
     		add $t1, $t1, $t7             # Calculate address
-    		lw $a2, 0($t1)                # Load content value
     		li $v0, 4                     # print string syscall
     		la $a0, value_message         # load "The value at this coordinate is: "
     		syscall
     
-    		li $v0, 1                     # print integer syscall
-    		move $a0, $a2                 # move the value to $a0
+    		li $v0, 4                     # print integer syscall
+    		la $a0, 0($t1)                  # move the value to $a0
     		syscall
     
     		li $v0, 4                     # print string syscall for newline
