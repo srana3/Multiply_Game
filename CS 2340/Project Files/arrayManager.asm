@@ -45,9 +45,9 @@
 			rem $t3, $t2, 10		# perform product modulus 10, should leave us with just the 1s digit stored in $t3
 			addi $t3, $t3, 48			# get the ascii value of the 1s digit
 			addi $t4, $t4, 48			# get the ascii value of the 10s digit
-			sb $t3, 0($s0)		# store the 1s digit into content array
+			sb $t4, 0($s0)		# store the 1s digit into content array
 			addi $s0, $s0, 1			# move to the next byte address of the content array
-			sb $t4, 0($s0)		# store the 10s digit in the conent array
+			sb $t3, 0($s0)		# store the 10s digit in the conent array
 			addi $s0, $s0, 3			# move to the next byte address of the content array
 			j StoreValues
 			
