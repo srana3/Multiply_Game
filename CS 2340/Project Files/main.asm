@@ -43,11 +43,13 @@
 		li $t9, 0                   	# Reset match counter
     		sw $t9, numMatches           	# Store 0 in numMatches
     		
-	jal Start
-	
-	#jal UserInput
+    		jal Start
+    		
+	#jal greet #PROBLEM WITH THIS PORTION
 	
 	EndGame:
+    		jal EndSound
+    		
     		# Ask the user if they want to restart
     		li $v0, 4
     		la $a0, newline              # Print a newline before asking

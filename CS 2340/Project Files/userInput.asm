@@ -102,6 +102,7 @@
 		li $v0, 4					# print string syscall
 		la $a0, not_match			# load "Not a match!" message
 		syscall
+		jal NoMatchSound		# play no match sound
 		b UserInput					# repeat the input process
 		
 	match_found:
@@ -109,6 +110,9 @@
 		la $a0, match				# load "It's a match!" message
 		syscall
 		
+		# Play match sound
+		jal MatchSound
+    
 		lw $t9, numMatches            # Load the current match count
 		addi $t9, $t9, 1            	# Increment match counter
     		sw $t9, numMatches           	# Store updated match count
