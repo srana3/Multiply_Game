@@ -20,11 +20,11 @@
 	.globl IntToString
 	IntToString: .space 128		# bytes for the string version of contentArray
 	.globl prompt1
-	prompt1: .asciiz "\nEnter 1st coordinate (A-D, 1-4): "
+	prompt1: .asciiz "Enter 1st coordinate (A-D, 1-4): "
 	.globl prompt2
-	prompt2: .asciiz "\nEnter 2nd coordinate (A-D, 1-4): "
+	prompt2: .asciiz "Enter 2nd coordinate (A-D, 1-4): "
 	.globl not_match
-	not_match: .asciiz "\nNot a match!"
+	not_match: .asciiz "\nNot a match!\n"
 	.globl match
 	match: .asciiz "\nIt's a match!"
 	.globl invalid
@@ -37,6 +37,14 @@
 	match_count_message: .asciiz "\nNumber of matches: "
 	.globl newline
 	newline: .asciiz "\n"
+	.globl colNames
+	colNames: .asciiz "\n    A     B    C    D   \n"
+	.globl unknown
+	unknown: .asciiz "|  ?  "
+	.globl known
+	known: .asciiz "|      "
+	.globl endCap
+	endCap: .asciiz "|\n"
 	
 .text
 	StartGame:
