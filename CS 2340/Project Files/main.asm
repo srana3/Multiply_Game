@@ -45,6 +45,8 @@
 	known: .asciiz "|      "
 	.globl endCap
 	endCap: .asciiz "|\n"
+	.globl partition
+	partition: .asciiz "|"
 	
 .text
 	StartGame:
