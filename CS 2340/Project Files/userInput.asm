@@ -37,20 +37,7 @@
 		add $t1, $t1, $t7			# calculate address
 		lw $t8, 0($t1)				# load value
 		
-		# Load and print the value from the content array at 1st coordinate
-    		la $t1, randContentArray
-    		add $t1, $t1, $t7            # Calculate address
-   		li $v0, 4                     # print string syscall
-    		la $a0, value_message         # load "The value at this coordinate is: "
-    		syscall
-    
-    		li $v0, 4                     # print integer syscall
-    		la $a0, 0($t1)                 # move the value to $a0
-    		syscall
-    
-    		li $v0, 4                     # print string syscall for newline
-    		la $a0, newline               # load newline
-    		syscall
+		jal SelectionDisplay1
     
 		# Prompt user for the 2nd coordinate (repeat process)
 		li $v0, 4					# print string syscall
@@ -85,20 +72,7 @@
 		add $t1, $t1, $t2			# calculate address
 		lw $t9, 0($t1)				# load value
 		
-		# Load and print the value from the content array at 1st coordinate
-    		la $t1, randContentArray
-    		add $t1, $t1, $t2            # Calculate address
-   		li $v0, 4                     # print string syscall
-    		la $a0, value_message         # load "The value at this coordinate is: "
-    		syscall
-    
-    		li $v0, 4                     # print integer syscall
-    		la $a0, 0($t1)                 # move the value to $a0
-    		syscall
-    
-    		li $v0, 4                     # print string syscall for newline
-    		la $a0, newline               # load newline
-    		syscall
+		jal SelectionDisplay2
 		
 		# Check if the two coordinates match
 		beq $t8, $t9, match_found

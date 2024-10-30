@@ -7,6 +7,7 @@
 		li $s2, 0				# set $s2 to be our index and start it at 0
 		li $s3, 1				# the constant 1
 		li $s4, 120
+		li $s7, '0'
 
 	InitializeArrays:
 		addi $s2, $s2, 1			# increment index
@@ -45,16 +46,22 @@
 			rem $t3, $t2, 10		# perform product modulus 10, should leave us with just the 1s digit stored in $t3
 			addi $t3, $t3, 48			# get the ascii value of the 1s digit
 			addi $t4, $t4, 48			# get the ascii value of the 10s digit
+			sb $s7, 0($s0)
+			addi $s0, $s0, 1
 			sb $t4, 0($s0)		# store the 1s digit into content array
 			addi $s0, $s0, 1			# move to the next byte address of the content array
 			sb $t3, 0($s0)		# store the 10s digit in the conent array
-			addi $s0, $s0, 3			# move to the next byte address of the content array
+			addi $s0, $s0, 2			# move to the next byte address of the content array
 			j StoreValues
 			
 		ConvertSingleDigits:
 			addi $t3, $t2, 48		# get the ascii value of the product
+			sb $s7, 0($s0)
+			addi $s0, $s0, 1
+			sb $s7, 0($s0)
+			addi $s0, $s0, 1
 			sb $t3, 0($s0)		# store the ascii version in the content array
-			addi $s0, $s0, 4		# move to the next address
+			addi $s0, $s0, 2		# move to the next address
 		
 		StoreValues:
 			sw $t2, 0($s1)				# put the product of X and Y into the key array
@@ -62,7 +69,7 @@
 		
 			addi $t0, $t0, 48			# add 48 to value of X to get its ASCII value
 			addi $t1, $t1, 48			# add 48 to value of Y to get its ASCII value
-		
+			
 			sb $t0, 0($s0)				# store the string version of X value into content array
 			addi $s0, $s0, 1			# move to the next BYTE in content array
 			sb $s4, 0($s0)				# store the "x" into content array
