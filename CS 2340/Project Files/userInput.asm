@@ -94,6 +94,8 @@
 		la $a0, match				# load "It's a match!" message
 		syscall
 		
+		jal check_timer
+		
 		# Play match sound
 		jal MatchSound
     

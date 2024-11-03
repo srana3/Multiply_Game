@@ -41,17 +41,6 @@
         li $v0, 33           
         syscall
         
-        # silence to prevent overlap
-        li $v0, 31
-        li $a0, 54           
-        li $a1, 10         
-        li $a2, 104            
-        li $a3, 0          
-        syscall
-        
-        li $v0, 33           
-        syscall
-        
         # Gb note
         li $v0, 31
         li $a0, 54           

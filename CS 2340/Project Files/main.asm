@@ -47,18 +47,32 @@
 	endCap: .asciiz "|\n"
 	.globl partition
 	partition: .asciiz "|"
+	.globl startTime
+	startTime:       .word 0                       # Memory location to store the start time
+	.globl timerMins
+	timerMins:         .word 0 
+	.globl timerSec
+	timerSec:         .word 0                      
+	.globl elapsedMsg
+	elapsedMsg:      .asciiz "\nElapsed Time: "
+	.globl minutes
+	minutes:      .asciiz " minute(s) and "
+	.globl seconds
+	seconds:      .asciiz " second(s)\n"
 	
 .text
 	StartGame:
 		li $t9, 0                   	# Reset match counter
     		sw $t9, numMatches           	# Store 0 in numMatches
     		
+    		jal initialize_timer
     		jal Start
     		
-	#jal greet #PROBLEM WITH THIS PORTION
 	
 	EndGame:
     		jal EndSound
+    		
+    		jal check_timer
     		
     		# Ask the user if they want to restart
     		li $v0, 4
@@ -84,5 +98,6 @@
     		j EndGame
     		
 	ExitGame:
+    		
     		li $v0, 10                  # Exit syscall
     		syscall
