@@ -88,13 +88,19 @@
     		syscall
     		move $t0, $v0               # Store user input
 
+    		# Check for 'Y' or 'y' to restart the game
     		li $t1, 'Y'
-    		beq $t0, $t1, StartGame      # If user inputs 'Y', restart the game
+    		li $t2, 'y'
+    		beq $t0, $t1, StartGame         # If input is 'Y', restart the game
+    		beq $t0, $t2, StartGame         # If input is 'y', restart the game
 
-    		li $t1, 'N'
-    		beq $t0, $t1, ExitGame       # If user inputs 'N', exit the game
+    		# Check for 'N' or 'n' to exit the game
+    		li $t3, 'N'
+    		li $t4, 'n'
+    		beq $t0, $t3, ExitGame          # If input is 'N', exit the game
+    		beq $t0, $t4, ExitGame          # If input is 'n', exit the game
 
-   		 # If input is not Y or N, ask again (default loop)
+    		# If input is not Y/y or N/n, ask again (default loop)
     		j EndGame
     		
 	ExitGame:
