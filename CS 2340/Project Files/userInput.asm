@@ -36,6 +36,7 @@
 		la $t1, randKeyArray
 		add $t1, $t1, $t7			# calculate address
 		lw $t8, 0($t1)				# load value
+		beq $t8, -1, invalid_input
 		
 		jal SelectionDisplay1
     
@@ -71,6 +72,7 @@
 		la $t1, randKeyArray
 		add $t1, $t1, $t2			# calculate address
 		lw $t9, 0($t1)				# load value
+		beq $t9, -1, invalid_input
 		
 		jal SelectionDisplay2
 		
