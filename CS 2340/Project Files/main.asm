@@ -55,6 +55,8 @@
 	timerSec:         .word 0                      
 	.globl elapsedMsg
 	elapsedMsg:      .asciiz "\nElapsed Time: "
+	.globl totalElapsedMsg
+	totalElapsedMsg:      .asciiz "\nTotal Elapsed Time: "
 	.globl minutes
 	minutes:      .asciiz " minute(s) and "
 	.globl seconds
@@ -72,7 +74,26 @@
 	EndGame:
     		jal EndSound
     		
-    		jal check_timer
+    		# display the last calculated elapsed time (does not calculate new elapsed time)
+    		li $v0, 4
+    		la $a0, totalElapsedMsg
+    		syscall
+
+    		li $v0, 1
+    		lw $a0, timerMins
+    		syscall
+
+    		li $v0, 4
+    		la $a0, minutes
+    		syscall
+
+    		li $v0, 1
+    		lw $a0, timerSec
+    		syscall
+
+    		li $v0, 4
+    		la $a0, seconds
+    		syscall
     		
     		# Ask the user if they want to restart
     		li $v0, 4
